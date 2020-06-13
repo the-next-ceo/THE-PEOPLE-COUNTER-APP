@@ -117,8 +117,8 @@ def infer_on_stream(args, client):
         PathArgs = 0
     elif PathArgs.endswith('.jpg')or PathArgs.endswith('.bmp'):
         single_image = True
-    capture_on = cv2.VideoCapture(PathArgs)
-    capture_on.open(PathArgs)
+    capture_on = cv2.VideoCapture(args.input)
+    capture_on.open(args.input)
     #giving some input for width as "w" and height as "h"
     w = int(capture_on.get(3))
     h = int(capture_on.get(4))
@@ -136,14 +136,13 @@ def infer_on_stream(args, client):
     
     ### TODO: Loop until stream is over ###
     while capture_on.isOpened():
-   
         
-        #if args.input is not None and writer is None:
-            #fourcc = cv2.VideoWriter_fourcc(*"MJPG")
-            #writer = cv2.VideoWriter(args.input,fourcc,30,(w, h),True)
+        if args.input is not None and writer is None:
+            fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+            writer = cv2.VideoWriter(args.input,fourcc,30,(w, h),True)
         if PathArgs is None:
             log.error("Warning ! Video  path not supplied\n")
-            
+            sys.exit(1)
 
         ### TODO: Read from the video capture ###
         flag, frame = capture_on.read()
@@ -154,7 +153,7 @@ def infer_on_stream(args, client):
         ### TODO: Pre-process the image as needed ###
         img_frame = cv2.resize(frame, (get_shape[3], get_shape[2]))
         img_frame = img_frame.transpose((2,0,1))
-        img_frame = img_frame.reshape(1, *img_frame.shape)
+        img_frame = img_frame.reshape(get_shape[0], get_shape[1],get_shape[3], get_shape[2] )
 
         ### TODO: Start asynchronous inference for specified request ###
         inf_start = time.time()
@@ -197,7 +196,7 @@ def infer_on_stream(args, client):
                 
             # Person duration in the video calculation
             if current_count < last_count:
-                #here converting the float duration to integer by using in below statement "int"
+                #here converting the float duration to integer by using "int" in below statement 
                 duration = int(time.time() - start_time)
                 if duration >=2:
                     total_count = total_count
