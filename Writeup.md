@@ -47,20 +47,16 @@ Some of the potential use cases of the people counter app are
 
 4. In retail , control of the people and the time inside the shop could be important in order to select the exposition and other issues.
 
-5. Easily monitor a specific area
-
-6. Intrusion detection 
-
 Each of these use cases would be useful because it about detecting and counting people in the specific area. 
 
 ## Assess Effects on End User Needs
 
 Lighting, model accuracy, and camera focal length/image size have different effects on a
 deployed edge model. The potential effects of each of these are as follows...
-- Lighting:- the light will be important in order to obtain a good result. Lighting is most assential factor which affects to result of model. We need input image with lighting because model can't predict so accurately if input image is dark. So monitored place must have lights.
-- Model accuracy:- Deployed edge model must have high accuracy because deployed edge model works in real time if we have deployed low accuracy model then it would give faulty results which is no good for end users.
-- Camera focal length:- High focal length gives you focus on specific object and narrow angle image while Low focal length gives you the wider angle. Now It's totally depend upon end user's reuqirements that which type of camera is required. If end users want to monitor wider place than high focal length camera is better but model can extract less information about object's in picture so it can lower the accuracy. In compare if end users want to monitor very narrow place then they can use low focal length camera.
-- Image size:- Image size totally depend upon resolution of image. If image resolution is better then size will be larger. Model can gives better output or result if image resolution is better but for higher resolution image model can take more time to gives output than less resolution image and also take more memory. If end users have more memory and also can manage with some delay for accurate result then higher resoltuion means larger image can be use.
+- Lighting:- the light will be important in order to obtain a good result. We need input image with lighting because model can't predict so accurately if input image is dark. So monitored place must have lights.
+- Model accuracy:- Deployed edge model must have high accuracy because deployed edge model works in real time if we have deployed low accuracy model then it would give garbage results which is no good for end users.
+- Camera focal length:- High focal length gives you focus on specific object and narrow angle image while Low focal length gives you the wider angle. Now It's totally depend upon end user's reuqirements that which type of camera is required. If end users want to monitor wider place than high focal length camera is better but model can extract less information about object's in picture so it can lower the accuracy.
+- Image size:- If image resolution is better then size will be larger. Model can gives better output or result if image resolution is better but for higher resolution image model can take more time to gives output than less resolution image and also take more memory. If end users have more memory and also can manage with some delay for accurate result then higher resoltuion means larger image can be use.
 
 ## Model Research
 
@@ -93,18 +89,24 @@ Model 3: [ssd_mobilenet_v2_coco]
   - The model was good for the app 
   
   - I tried to improve the model for the app by changing the threshold to 0.35, doing this the model works well but it misses drawing the boxes around a person at specific time of video, for significant no of consecutive frames.  Using probability threshold 0.35.
+ 
+ Model 4 : [person-detection-retail-0013]
+ - [This is an Intel Pretrained Model downloaded from Model Zoo]
+ - for the directory [cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader]
+ - to download in the workspace [sudo ./downloader.py --name person-detection-retail-0013 -o /home/workspace]
+ - Not needed for conversion to .xml and .bin file, because it comes converted into xml and bin by default.
+ 
+ - This is model was perfect for the app to test the results.
+ - I haven't faced any issue with this model like the previous ones.
+
 ## Conclusion
+
 
 After my investigation on those tree above models, I came to  the clonclusion that the very good model and  suitable accurate model was the one existing in Intermediate Representations provided by Intel® [person-detection-retail-0013](https://docs.openvinotoolkit.org/latest/_models_intel_person_detection_retail_0013_description_person_detection_retail_0013.html)
 
-Use this commad to dowload the model 
-
-```
-python3  /opt/intel/openvino/deployment_tools/tools/model_downloader/downloader.py --name person-detection-retail-0013 -o /home/workspace/model/pre_trained/intel
-```
 
 Running the app 
 
 ```
-python main.py -i resources/Pedestrian_Detect_2_1_1.mp4 -m model/pre_trained/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -l /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so -d CPU -pt 0.6 | ffmpeg -v warning -f rawvideo -pixel_format bgr24 -video_size 768x432 -framerate 24 -i - http://0.0.0.0:3004/fac.ffm
+python main.py -i resources/Pedestrian_Detect_2_1_1.mp4 -m person-detection-retail-0013.xml -l /opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/libcpu_extension_sse4.so -d CPU -pt 0.6 | ffmpeg -v warning -f rawvideo -pixel_format bgr24 -video_size 768x432 -framerate 24 -i - http://0.0.0.0:3004/fac.ffm
 '''
