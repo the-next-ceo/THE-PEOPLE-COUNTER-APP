@@ -90,7 +90,7 @@ Model 3: [ssd_mobilenet_v2_coco]
   
   - I tried to improve the model for the app by changing the threshold to 0.35, doing this the model works well but it misses drawing the boxes around a person at specific time of video, for significant no of consecutive frames.  Using probability threshold 0.35.
  
- Model 4 : [person-detection-retail-0013]
+ Model 4 : [person-detection-retail-0013 FP32]
  - [This is an Intel Pretrained Model downloaded from Model Zoo]
  - for the directory [cd /opt/intel/openvino/deployment_tools/open_model_zoo/tools/downloader]
  - to download in the workspace [sudo ./downloader.py --name person-detection-retail-0013 -o /home/workspace]
