@@ -64,7 +64,7 @@ There are three components that need to be running in separate terminals for thi
 From the main directory:
 
 * For MQTT/Mosca server:
-   ```
+  ```
    cd webservice/server
    npm install
    ```
